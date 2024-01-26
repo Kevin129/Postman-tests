@@ -1,0 +1,555 @@
+{
+	"info": {
+		"_postman_id": "6e1bf203-7dc9-4f47-bae5-b39c7602d102",
+		"name": "Jira Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21425362"
+	},
+	"item": [
+		{
+			"name": "Create filter with the unique name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"filterName\", \"newFilter\" + pm.variables.replaceIn('{{$timestamp}}'));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check description\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.description).to.eql(\"Lists all open bugs by Postman\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Your Test name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.contain(\"newFilter\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "herito12@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ATATT3xFfGF01u8D_YDIT0IZNZvv-nluQ8Jm4xgoXyet21NHCf_USAiGT2S7p-CHxZkNS3uRr0DlMRWq_ZXi8h-Mm6mpBAcbICrqBUKgu0T6q39y5eglG5PCB61wX7R5JVgxbFL5ZMm0MU8jAiWpwEZtKkyp6FbuEjbW_3-ZO2QxtvzaCVDl9o4=44771771",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{filterName}}\",\r\n    \"description\": \"Lists all open bugs by Postman\",\r\n    \"jql\": \"issuetype = Bug\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://testyjira.atlassian.net/rest/api/latest/filter",
+					"protocol": "https",
+					"host": [
+						"testyjira",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"latest",
+						"filter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create filter with the same name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check error message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.errors[\"filterName\"]).to.eql(\"Filtr o takiej samej nazwie już istnieje.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "herito12@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ATATT3xFfGF01u8D_YDIT0IZNZvv-nluQ8Jm4xgoXyet21NHCf_USAiGT2S7p-CHxZkNS3uRr0DlMRWq_ZXi8h-Mm6mpBAcbICrqBUKgu0T6q39y5eglG5PCB61wX7R5JVgxbFL5ZMm0MU8jAiWpwEZtKkyp6FbuEjbW_3-ZO2QxtvzaCVDl9o4=44771771",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"All open bags\",\r\n    \"description\": \"Lists all open bugs by Postman\",\r\n    \"jql\": \"issuetype = Bug\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://testyjira.atlassian.net/rest/api/latest/filter",
+					"protocol": "https",
+					"host": [
+						"testyjira",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"latest",
+						"filter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get filter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.eql(\"All open bags\");\r",
+							"});\r",
+							"pm.test(\"Check description\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.description).to.contain(\"Lists all open bugs by Postman\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "herito12@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ATATT3xFfGF01u8D_YDIT0IZNZvv-nluQ8Jm4xgoXyet21NHCf_USAiGT2S7p-CHxZkNS3uRr0DlMRWq_ZXi8h-Mm6mpBAcbICrqBUKgu0T6q39y5eglG5PCB61wX7R5JVgxbFL5ZMm0MU8jAiWpwEZtKkyp6FbuEjbW_3-ZO2QxtvzaCVDl9o4=44771771",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://testyjira.atlassian.net/rest/api/latest/filter/10007",
+					"protocol": "https",
+					"host": [
+						"testyjira",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"latest",
+						"filter",
+						"10007"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get filter which does not exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Error message Check\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.errorMessages[0]).to.eql(\"Wybrany filtr nie jest dostępny; prawdopodobnie został usunięty lub jego uprawnienia uległy zmianie.\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "herito12@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ATATT3xFfGF01u8D_YDIT0IZNZvv-nluQ8Jm4xgoXyet21NHCf_USAiGT2S7p-CHxZkNS3uRr0DlMRWq_ZXi8h-Mm6mpBAcbICrqBUKgu0T6q39y5eglG5PCB61wX7R5JVgxbFL5ZMm0MU8jAiWpwEZtKkyp6FbuEjbW_3-ZO2QxtvzaCVDl9o4=44771771",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://testyjira.atlassian.net/rest/api/latest/filter/1",
+					"protocol": "https",
+					"host": [
+						"testyjira",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"latest",
+						"filter",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update filter",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"filterNameAfterUpdate\", \"updatedFilter\" + pm.variables.replaceIn('{{$timestamp}}'));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check description\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.description).to.eql(\"Lists all open bugs by Postman\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Your Test name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.contain(\"updatedFilter\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "herito12@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ATATT3xFfGF01u8D_YDIT0IZNZvv-nluQ8Jm4xgoXyet21NHCf_USAiGT2S7p-CHxZkNS3uRr0DlMRWq_ZXi8h-Mm6mpBAcbICrqBUKgu0T6q39y5eglG5PCB61wX7R5JVgxbFL5ZMm0MU8jAiWpwEZtKkyp6FbuEjbW_3-ZO2QxtvzaCVDl9o4=44771771",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{filterNameAfterUpdate}}\",\r\n    \"description\": \"Lists all open bugs by Postman\",\r\n    \"jql\": \"issuetype = Bug\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://testyjira.atlassian.net/rest/api/latest/filter/10002",
+					"protocol": "https",
+					"host": [
+						"testyjira",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"latest",
+						"filter",
+						"10002"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete filter does not exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check errorMessages\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.errorMessages[0]).to.contain(\"Filtr obecnie nie istnieje.\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "herito12@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ATATT3xFfGF01u8D_YDIT0IZNZvv-nluQ8Jm4xgoXyet21NHCf_USAiGT2S7p-CHxZkNS3uRr0DlMRWq_ZXi8h-Mm6mpBAcbICrqBUKgu0T6q39y5eglG5PCB61wX7R5JVgxbFL5ZMm0MU8jAiWpwEZtKkyp6FbuEjbW_3-ZO2QxtvzaCVDl9o4=44771771",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://testyjira.atlassian.net/rest/api/latest/filter/10006",
+					"protocol": "https",
+					"host": [
+						"testyjira",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"latest",
+						"filter",
+						"10006"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create filter to delete",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"filterNameToDelete\", \"filterToDelete\" + pm.variables.replaceIn('{{$timestamp}}'));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check description\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.description).to.eql(\"Lists all open bugs by Postman\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Your Test name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.contain(\"filterToDelete\");\r",
+							"});\r",
+							"\r",
+							"pm.globals.set(\"idToDelete\", pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "herito12@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ATATT3xFfGF01u8D_YDIT0IZNZvv-nluQ8Jm4xgoXyet21NHCf_USAiGT2S7p-CHxZkNS3uRr0DlMRWq_ZXi8h-Mm6mpBAcbICrqBUKgu0T6q39y5eglG5PCB61wX7R5JVgxbFL5ZMm0MU8jAiWpwEZtKkyp6FbuEjbW_3-ZO2QxtvzaCVDl9o4=44771771",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{filterNameToDelete}}\",\r\n    \"description\": \"Lists all open bugs by Postman\",\r\n    \"jql\": \"issuetype = Bug\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://testyjira.atlassian.net/rest/api/latest/filter",
+					"protocol": "https",
+					"host": [
+						"testyjira",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"latest",
+						"filter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete filter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "herito12@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ATATT3xFfGF01u8D_YDIT0IZNZvv-nluQ8Jm4xgoXyet21NHCf_USAiGT2S7p-CHxZkNS3uRr0DlMRWq_ZXi8h-Mm6mpBAcbICrqBUKgu0T6q39y5eglG5PCB61wX7R5JVgxbFL5ZMm0MU8jAiWpwEZtKkyp6FbuEjbW_3-ZO2QxtvzaCVDl9o4=44771771",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://testyjira.atlassian.net/rest/api/latest/filter/{{idToDelete}}",
+					"protocol": "https",
+					"host": [
+						"testyjira",
+						"atlassian",
+						"net"
+					],
+					"path": [
+						"rest",
+						"api",
+						"latest",
+						"filter",
+						"{{idToDelete}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
